@@ -28,9 +28,10 @@ class Endpoint:
         self.requests[id] = num_reqs
 
     def __repr__(self):
-        string = str(self.dc_lat) + " " + str(len(self.caches.keys()))
+        string = str(self.dc_lat) + " " + str(len(self.caches.keys())) + "\n"
         for c in self.caches.keys():
-            print str(c), str(self.caches[c])
+            string += str(c) + " " + str(self.caches[c]) + "\n"
+        return string
 
 
 def calc_endpoint_score(caches, endpoint):
@@ -93,7 +94,7 @@ def selfcheck():
 #    for k in videos.keys():
 #        print str(videos[k].size) + " ",
 #    print
-    print endpointsDict[0]
+    print endpointsDict[2]
 
 
 def main():
