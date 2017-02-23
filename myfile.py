@@ -2,15 +2,15 @@ import sys
 
 class Video:
     def __init__(self, id, size):
-        id = id
-        size = size
+        self.id = id
+        self.size = size
 
 
 class Cache:
     def __init__(self, id, size):
-        size = size
-        id = id
-        vids = []
+        self.size = size
+        self.id = id
+        self.vids = []
 
     def add_vid(self, vid):
         self.vids.append[vid]
@@ -20,12 +20,17 @@ class Cache:
 class Endpoint:
 
     def __init__(self, caches, lat):
-        caches = caches
-        requests = dict()
-        dc_lat = lat
+        self.caches = caches
+        self.requests = dict()
+        self.dc_lat = lat
 
     def add_request(self, id, num_reqs):
         self.requests[id] = num_reqs
+
+    def __repr__(self):
+        string = str(self.dc_lat) + " " + str(len(self.caches.keys()))
+        for c in self.caches.keys():
+            print str(c), str(self.caches[c])
 
 
 def calc_endpoint_score(caches, endpoint):
@@ -41,7 +46,7 @@ def calc_endpoint_score(caches, endpoint):
         score += min_lat * endpoint.requests[req]
 
 
-videoSizes = dict()
+videos = dict()
 endpointsDict = dict()
 nVideos = 0
 nEndpoints = 0
@@ -51,7 +56,7 @@ cacheSize = 0
 
 
 def init_data(fname):
-    global nVideos, nEndpoints, nRequests, nCaches, cacheSize, videoSizes, endpointsDict
+    global nVideos, nEndpoints, nRequests, nCaches, cacheSize, videos, endpointsDict
     try:
         with open(fname, 'r') as fhanlder:
             initline = fhanlder.readline().split()
@@ -61,7 +66,7 @@ def init_data(fname):
             nCaches = int(initline[3])
             cacheSize = int(initline[4])
             for i, size in enumerate(fhanlder.readline().split()):
-                videoSizes[i] = Video(i, int(size))
+                videos[i] = Video(i, int(size))
             for i in range(0, nEndpoints):
                 endpoint_line = fhanlder.readline().split()
                 latency = int(endpoint_line[0])
@@ -72,7 +77,6 @@ def init_data(fname):
                 endpointsDict[i] = Endpoint(connection_latencies, latency)
             for i in range(0, nRequests):
                 request_line = fhanlder.readline().split()
-                print " ".join(request_line)
                 endpointsDict[int(request_line[1])].add_request(int(request_line[0]), int(request_line[2]))
     except IOError:
         print "Couldn't find ", fname
@@ -85,9 +89,12 @@ def selfcheck():
     print "nRequests", nRequests
     print "nCaches", nCaches
     print "cacheSize", cacheSize
-    for k in videoSizes.keys():
-        print videoSizes[k] + " ",
-    print
+    print len(videos.keys())
+#    for k in videos.keys():
+#        print str(videos[k].size) + " ",
+#    print
+    print endpointsDict[0]
+
 
 def main():
     fname = sys.argv[1]
