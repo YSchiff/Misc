@@ -36,8 +36,7 @@ class Cache:
                     sum += self.connections[eid] * self.endpoints[eid].requests[v.id]
 
             goodness.append((v.id, float(sum)/v.size))
-
-        for g in sorted(goodness, key=itemgetter(1)):
+        for g in sorted(goodness, key=itemgetter(1), reverse=True):
             if self.size >= videos[g[0]].size:
                 self.add_vid(videos[g[0]])
             if self.size == 0:
