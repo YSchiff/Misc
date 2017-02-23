@@ -27,7 +27,8 @@ class Endpoint:
         self.dc_lat = lat
 
     def add_request(self, id, num_reqs):
-        self.requests[id] = num_reqs
+        if id is not None and num_reqs is not None:
+            self.requests[id] = num_reqs
 
     def __repr__(self):
         string = str(self.dc_lat) + " " + str(len(self.caches.keys())) + "\n"
@@ -84,19 +85,6 @@ def init_data(fname):
     except IOError:
         print "Couldn't find ", fname
         raise
-
-
-def selfcheck():
-    print "nVideos", nVideos
-    print "nEndpoints", nEndpoints
-    print "nRequests", nRequests
-    print "nCaches", nCaches
-    print "cacheSize", cacheSize
-    print len(videos.keys())
-#    for k in videos.keys():
-#        print str(videos[k].size) + " ",
-#    print
-    print endpointsDict[2]
 
 
 def main():
