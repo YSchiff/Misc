@@ -2,6 +2,7 @@
 
 import sys
 
+
 class Video:
     def __init__(self, id, size):
         self.id = id
@@ -90,7 +91,6 @@ def init_data(fname):
 def main():
     fname = sys.argv[1]
     init_data(fname)
-    selfcheck()
 
 if __name__ == '__main__':
     main()
