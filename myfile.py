@@ -1,5 +1,6 @@
 import sys
 from operator import itemgetter
+import multiprocessing.dummy as mp
 
 
 class Video:
@@ -28,14 +29,23 @@ class Cache:
                 self.endpoints[e.id] = e
 
     def set_requests(self, videos):
-        goodness = []
-        for v in videos.values():
-            sum = 0
-            for eid in self.endpoints.keys():
-                if v.id in self.endpoints[eid].requests.keys():
-                    sum += self.connections[eid] * self.endpoints[eid].requests[v.id]
+        points = {}
+        for eid in self.endpoints.keys():
+            for vid in self.endpoints[eid].requests.keys():
+                if vid not in points.keys():
+                    points[vid] = 0
+                points[vid] += self.connections[eid] * self.endpoints[eid].requests[vid]
 
-            goodness.append((v.id, float(sum)/v.size))
+        goodness = []
+#        for v in videos.values():
+#            sum = 0
+#            for eid in self.endpoints.keys():
+#                if v.id in self.endpoints[eid].requests.keys():
+#                    sum += self.connections[eid] * self.endpoints[eid].requests[v.id]
+#
+#            goodness.append((v.id, float(sum)/v.size))
+        for p in points.keys():
+            goodness.append((p, float(points[p])/videos[p].size))
         for g in sorted(goodness, key=itemgetter(1), reverse=True):
             if self.size >= videos[g[0]].size:
                 self.add_vid(videos[g[0]])
@@ -85,10 +95,15 @@ nCaches = 0
 cacheSize = 0
 
 
+from datetime import datetime
+
 def build_caches():
     for i in range(0, nCaches):
+        print i, "Starting", datetime.now()
         cache_dict[i] = Cache(i, cacheSize, endpointsDict)
         cache_dict[i].set_requests(videos)
+        print i, "Done", datetime.now()
+
 
 
 def init_data(fname):
