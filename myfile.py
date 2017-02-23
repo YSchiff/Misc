@@ -18,7 +18,7 @@ class Cache:
         self.set_connections(endpoints)
 
     def add_vid(self, vid):
-        self.vids.append(vid)
+        self.vids.append(vid.id)
         self.size -= vid.size
 
     def set_connections(self, endpoints):
@@ -120,10 +120,20 @@ def init_data(fname):
         raise
 
 
+def print_output(caches, fname):
+    with open(fname, 'w') as fhandler:
+        fhandler.write(str(len(caches))+'\n')
+        for c in caches.keys():
+            fhandler.write(str(c) + " ")
+            fhandler.write(" ".join([str(v) for v in caches[c].vids]))
+            fhandler.write('\n')
+
+
 def main():
     fname = sys.argv[1]
     init_data(fname)
     build_caches()
+    print_output(cache_dict, fname+".out")
 
 if __name__ == '__main__':
     main()
