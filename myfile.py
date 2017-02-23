@@ -78,6 +78,7 @@ def calc_endpoint_score(caches, endpoint):
         score += min_lat * endpoint.requests[req]
 
 
+cache_dict = dict()
 videos = dict()
 endpointsDict = dict()
 nVideos = 0
@@ -85,6 +86,12 @@ nEndpoints = 0
 nRequests = 0
 nCaches = 0
 cacheSize = 0
+
+
+def build_caches():
+    for i in range(0, nCaches):
+        cache_dict[i] = Cache(i, cacheSize, endpointsDict)
+        cache_dict[i].set_requests(videos)
 
 
 def init_data(fname):
@@ -118,6 +125,7 @@ def init_data(fname):
 def main():
     fname = sys.argv[1]
     init_data(fname)
+    build_caches()
 
 if __name__ == '__main__':
     main()
