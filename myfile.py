@@ -1,5 +1,3 @@
-#! python2
-
 import sys
 from operator import itemgetter
 
