@@ -14,31 +14,31 @@ class Cache:
         self.id = id
         self.vids = []
         self.connections = {}
-        self.endpoints = []
+        self.endpoints = {}
         self.set_connections(endpoints)
 
     def add_vid(self, vid):
-        self.vids.append[vid]
+        self.vids.append(vid)
         self.size -= vid.size
 
     def set_connections(self, endpoints):
-        for e in endpoints:
+        for e in endpoints.values():
             if self.id in e.caches.keys():
                 self.connections[e.id] = e.dc_lat - e.caches[self.id]
-                self.endpoints.append(e)
+                self.endpoints[e.id] = e
 
     def set_requests(self, videos):
         goodness = []
-        for v in videos:
+        for v in videos.values():
             sum = 0
-            for e in self.endpoints:
-                if v.id in e.requests.keys():
-                    sum += self.connections[e.id] * e.requests[v.id]
+            for eid in self.endpoints.keys():
+                if v.id in self.endpoints[eid].requests.keys():
+                    sum += self.connections[eid] * self.endpoints[eid].requests[v.id]
 
-            goodness.append(v.id, float(sum)/v.size)
+            goodness.append((v.id, float(sum)/v.size))
 
         for g in sorted(goodness, key=itemgetter(1)):
-            if self.size >= self.videos[g[0]].size:
+            if self.size >= videos[g[0]].size:
                 self.add_vid(videos[g[0]])
             if self.size == 0:
                 break
