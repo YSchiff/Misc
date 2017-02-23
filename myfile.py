@@ -1,6 +1,7 @@
 #! python2
 
 import sys
+from operator import itemgetter
 
 
 class Video:
@@ -10,22 +11,48 @@ class Video:
 
 
 class Cache:
-    def __init__(self, id, size):
+    def __init__(self, id, size, endpoints):
         self.size = size
         self.id = id
         self.vids = []
+        self.connections = {}
+        self.endpoints = []
+        self.set_connections(endpoints)
 
     def add_vid(self, vid):
         self.vids.append[vid]
         self.size -= vid.size
 
+    def set_connections(self, endpoints):
+        for e in endpoints:
+            if self.id in e.caches.keys():
+                self.connections[e.id] = e.dc_lat - e.caches[self.id]
+                self.endpoints.append(e)
+
+    def set_requests(self, videos):
+        goodness = []
+        for v in videos:
+            sum = 0
+            for e in self.endpoints:
+                if v.id in e.requests.keys():
+                    sum += self.connections[e.id] * e.requests[v.id]
+
+            goodness.append(v.id, float(sum)/v.size)
+
+        for g in sorted(goodness, key=itemgetter(1)):
+            if self.size >= self.videos[g[0]].size:
+                self.add_vid(videos[g[0]])
+            if self.size == 0:
+                break
+
 
 class Endpoint:
 
-    def __init__(self, caches, lat):
+    def __init__(self, caches, lat, i):
         self.caches = caches
         self.requests = dict()
         self.dc_lat = lat
+        self.id = i
 
     def add_request(self, id, num_reqs):
         if id is not None and num_reqs is not None:
@@ -79,7 +106,7 @@ def init_data(fname):
                 for j in range(0, int(endpoint_line[1])):
                     line = fhanlder.readline().split()
                     connection_latencies[int(line[0])] = int(line[1])
-                endpointsDict[i] = Endpoint(connection_latencies, latency)
+                endpointsDict[i] = Endpoint(connection_latencies, latency, i)
             for i in range(0, nRequests):
                 request_line = fhanlder.readline().split()
                 endpointsDict[int(request_line[1])].add_request(int(request_line[0]), int(request_line[2]))
