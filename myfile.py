@@ -24,7 +24,7 @@ class Cache:
 
     def set_connections(self, endpoints):
         for e in endpoints.values():
-            if self.id in e.caches.keys():
+            if self.id in e.caches:
                 self.connections[e.id] = e.dc_lat - e.caches[self.id]
                 self.endpoints[e.id] = e
 
@@ -32,7 +32,7 @@ class Cache:
         points = {}
         for eid in self.endpoints.keys():
             for vid in self.endpoints[eid].requests.keys():
-                if vid not in points.keys():
+                if vid not in points:
                     points[vid] = 0
                 points[vid] += self.connections[eid] * self.endpoints[eid].requests[vid]
 
@@ -79,7 +79,7 @@ def calc_endpoint_score(caches, endpoint):
         min_lat = endpoint.dc_lat
         for c in caches:
             # requested video is in cache and cache is connected to endpoint
-            if req in caches.vids and c in endpoint.caches.keys():
+            if req in caches.vids and c in endpoint.caches:
                 if endpoint.caches[c] < min_lat:
                     min_lat = endpoint.caches[c]
         score += min_lat * endpoint.requests[req]
