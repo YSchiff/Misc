@@ -144,10 +144,14 @@ def print_output(caches, fname):
 
 
 def main():
+    start = datetime.now()
     fname = sys.argv[1]
     init_data(fname)
     build_caches()
     print_output(cache_dict, fname+".out")
+    end = datetime.now()
+    print "START:\t",start
+    print "END:\t", end
 
 if __name__ == '__main__':
     main()
